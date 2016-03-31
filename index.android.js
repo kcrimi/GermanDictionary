@@ -1,51 +1,44 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- */
-
 import React, {
-  AppRegistry,
-  Component,
-  StyleSheet,
-  Text,
-  View
+  View, Text, TextInput, AppRegistry, StyleSheet
 } from 'react-native';
+import styles from './styles.js'
+var english_german = require('./english_german.json');
 
-class Dictionary extends Component {
+class Dictionary extends React.Component{
+
+  constructor(props){
+    super(props);
+    this.state = {
+      input: '',
+      output: ''
+    };
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Shake or press menu button for dev menu
-        </Text>
+      <View style = { styles.parent } >
+        <Text>Type something in English</Text>
+        <TextInput style={ styles.textInput} 
+          autoFocus={true}
+          autoCapitalize={'none'}
+          onChangeText={(text) => this.setState({input: text})}
+          text = { this.state.input }
+          onSubmitEditing = { this.showMeaning.bind(this) }/>
+        <Text style = { styles.germanLabel } >German equivalent:</Text>
+        <Text style = { styles.germanWord } > { this.state.output } </Text>
       </View>
     );
   }
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+  showMeaning() {
+    var meaning = this.state.input in english_german ?
+      english_german[this.state.input] :
+      'Not Found';
+
+    this.setState({
+      output: meaning
+    });
+  }
+}
 
 AppRegistry.registerComponent('Dictionary', () => Dictionary);
